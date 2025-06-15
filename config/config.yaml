@@ -1,0 +1,17 @@
+fyers:
+  access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiZDoxIiwiZDoyIiwieDowIiwieDoxIiwieDoyIl0sImF0X2hhc2giOiJnQUFBQUFCb1Rva243T1JNOXRwWGkzb2ZpdHFNT2VkUllueWlIS0g3Z0lFVzBGNHBwXzAxenFhU01IWDBiTXhCdlBraERrR0tmcmtoejF0enNjbURreGVPanJVSGVKb3NaYjZqN0E2YmtFQ19OUXpQSVUxdnJTVT0iLCJkaXNwbGF5X25hbWUiOiIiLCJvbXMiOiJLMSIsImhzbV9rZXkiOiI2YTczNTJjMTg5NWIwZjI4ZjBlNjMxNjU4ZWY2NzYwNjk5M2VlYTRkODEwYTM1ZTUwZTBiM2ZlOCIsImlzRGRwaUVuYWJsZWQiOiJOIiwiaXNNdGZFbmFibGVkIjoiTiIsImZ5X2lkIjoiWU0wNDA3NyIsImFwcFR5cGUiOjEwMCwiZXhwIjoxNzUwMDMzODAwLCJpYXQiOjE3NDk5NzczODMsImlzcyI6ImFwaS5meWVycy5pbiIsIm5iZiI6MTc0OTk3NzM4Mywic3ViIjoiYWNjZXNzX3Rva2VuIn0.83Zb0u2EUfqQZ3pON4N1mxTpvWJvBIrvvN-TYaq95Hk
+  client_id: QZAWYQ69KZ-100
+  redirect_uri: https://trade.fyers.in/api-login/redirect-uri/index.html
+  secret_key: J02WG5J3V9
+  token_expiry: '2025-06-16 21:49:43'
+  totp_key: ''
+logging:
+  file: logs/strategy.log
+  level: INFO
+strategy:
+  analysis_time: 09:20
+  breakout_pct: 10
+  max_holding_minutes: 30
+  risk_reward_ratio: 2
+  stoploss_pct: 20
+  symbol: NSE:NIFTY50-INDEX
