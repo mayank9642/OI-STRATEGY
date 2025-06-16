@@ -6193,3 +6193,85 @@
 2025-06-16 13:43:01,095 - INFO - Trade Size: 1 lots, Notional Value: 10.65
 2025-06-16 13:43:01,692 - INFO - Order placed: NSE:NIFTY2561925500CE BUY 1 - Response: {'code': -50, 'message': '1 not a multiple of minimum lot size 75', 's': 'error'}
 2025-06-16 13:43:01,692 - ERROR - Order placement failed: {'code': -50, 'message': '1 not a multiple of minimum lot size 75', 's': 'error'}
+2025-06-16 13:44:01,715 - INFO - Current IST time: 2025-06-16 13:44:01
+2025-06-16 13:44:01,715 - INFO - Fetching Nifty option chain data using Fyers API
+2025-06-16 13:44:02,495 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 13:44:03,898 - INFO - Current Nifty spot price: 0
+2025-06-16 13:44:03,898 - INFO - Sample option data structure: ['ask', 'bid', 'description', 'ex_symbol', 'exchange', 'fp', 'fpch', 'fpchp', 'fyToken', 'ltp', 'ltpch', 'ltpchp', 'option_type', 'strike_price', 'symbol']
+2025-06-16 13:44:03,901 - INFO - Top 5 CE OI: [{'strikePrice': 25500, 'openInterest': 8216700}, {'strikePrice': 25300, 'openInterest': 7772100}, {'strikePrice': 25000, 'openInterest': 6999600}, {'strikePrice': 25200, 'openInterest': 6201975}, {'strikePrice': 25800, 'openInterest': 5543100}]
+2025-06-16 13:44:03,901 - INFO - Top 5 PE OI: [{'strikePrice': 24800, 'openInterest': 9974550}, {'strikePrice': 24700, 'openInterest': 9287625}, {'strikePrice': 24000, 'openInterest': 8955600}, {'strikePrice': 24500, 'openInterest': 8407200}, {'strikePrice': 24600, 'openInterest': 6765600}]
+2025-06-16 13:44:03,901 - INFO - Successfully fetched option chain with 82 options
+2025-06-16 13:44:03,902 - INFO - Current PUT premium: 82.9, Breakout level: 94.3
+2025-06-16 13:44:03,902 - INFO - Current CALL premium: 10.2, Breakout level: 10.5
+2025-06-16 13:45:03,924 - INFO - Current IST time: 2025-06-16 13:45:03
+2025-06-16 13:45:03,924 - INFO - Fetching Nifty option chain data using Fyers API
+2025-06-16 13:45:04,934 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 13:45:06,190 - INFO - Current Nifty spot price: 0
+2025-06-16 13:45:06,191 - INFO - Sample option data structure: ['ask', 'bid', 'description', 'ex_symbol', 'exchange', 'fp', 'fpch', 'fpchp', 'fyToken', 'ltp', 'ltpch', 'ltpchp', 'option_type', 'strike_price', 'symbol']
+2025-06-16 13:45:06,193 - INFO - Top 5 CE OI: [{'strikePrice': 25500, 'openInterest': 8216700}, {'strikePrice': 25300, 'openInterest': 7772100}, {'strikePrice': 25000, 'openInterest': 6999600}, {'strikePrice': 25200, 'openInterest': 6201975}, {'strikePrice': 25800, 'openInterest': 5543100}]
+2025-06-16 13:45:06,193 - INFO - Top 5 PE OI: [{'strikePrice': 24800, 'openInterest': 9974550}, {'strikePrice': 24700, 'openInterest': 9287625}, {'strikePrice': 24000, 'openInterest': 8955600}, {'strikePrice': 24500, 'openInterest': 8407200}, {'strikePrice': 24600, 'openInterest': 6765600}]
+2025-06-16 13:45:06,193 - INFO - Successfully fetched option chain with 82 options
+2025-06-16 13:45:06,194 - INFO - Current PUT premium: 84.0, Breakout level: 94.3
+2025-06-16 13:45:06,194 - INFO - Current CALL premium: 9.8, Breakout level: 10.5
+2025-06-16 13:46:06,216 - INFO - Current IST time: 2025-06-16 13:46:06
+2025-06-16 13:46:06,216 - INFO - Fetching Nifty option chain data using Fyers API
+2025-06-16 13:46:07,182 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 13:46:08,414 - INFO - Current Nifty spot price: 0
+2025-06-16 13:46:08,414 - INFO - Sample option data structure: ['ask', 'bid', 'description', 'ex_symbol', 'exchange', 'fp', 'fpch', 'fpchp', 'fyToken', 'ltp', 'ltpch', 'ltpchp', 'option_type', 'strike_price', 'symbol']
+2025-06-16 13:46:08,417 - INFO - Top 5 CE OI: [{'strikePrice': 25500, 'openInterest': 8216700}, {'strikePrice': 25300, 'openInterest': 7772100}, {'strikePrice': 25000, 'openInterest': 6999600}, {'strikePrice': 25200, 'openInterest': 6201975}, {'strikePrice': 25800, 'openInterest': 5543100}]
+2025-06-16 13:46:08,417 - INFO - Top 5 PE OI: [{'strikePrice': 24800, 'openInterest': 9974550}, {'strikePrice': 24700, 'openInterest': 9287625}, {'strikePrice': 24000, 'openInterest': 8955600}, {'strikePrice': 24500, 'openInterest': 8407200}, {'strikePrice': 24600, 'openInterest': 6765600}]
+2025-06-16 13:46:08,417 - INFO - Successfully fetched option chain with 82 options
+2025-06-16 13:46:08,418 - INFO - Current PUT premium: 83.35, Breakout level: 94.3
+2025-06-16 13:46:08,418 - INFO - Current CALL premium: 10.05, Breakout level: 10.5
+2025-06-16 13:47:08,438 - INFO - Current IST time: 2025-06-16 13:47:08
+2025-06-16 13:47:08,438 - INFO - Fetching Nifty option chain data using Fyers API
+2025-06-16 13:47:09,145 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 13:47:10,347 - INFO - Current Nifty spot price: 0
+2025-06-16 13:47:10,347 - INFO - Sample option data structure: ['ask', 'bid', 'description', 'ex_symbol', 'exchange', 'fp', 'fpch', 'fpchp', 'fyToken', 'ltp', 'ltpch', 'ltpchp', 'option_type', 'strike_price', 'symbol']
+2025-06-16 13:47:10,350 - INFO - Top 5 CE OI: [{'strikePrice': 25500, 'openInterest': 8216700}, {'strikePrice': 25300, 'openInterest': 7772100}, {'strikePrice': 25000, 'openInterest': 6999600}, {'strikePrice': 25200, 'openInterest': 6201975}, {'strikePrice': 25800, 'openInterest': 5543100}]
+2025-06-16 13:47:10,350 - INFO - Top 5 PE OI: [{'strikePrice': 24800, 'openInterest': 9974550}, {'strikePrice': 24700, 'openInterest': 9287625}, {'strikePrice': 24000, 'openInterest': 8955600}, {'strikePrice': 24500, 'openInterest': 8407200}, {'strikePrice': 24600, 'openInterest': 6765600}]
+2025-06-16 13:47:10,350 - INFO - Successfully fetched option chain with 82 options
+2025-06-16 13:47:10,351 - INFO - Current PUT premium: 84.35, Breakout level: 94.3
+2025-06-16 13:47:10,351 - INFO - Current CALL premium: 9.8, Breakout level: 10.5
+2025-06-16 13:48:10,371 - INFO - Current IST time: 2025-06-16 13:48:10
+2025-06-16 13:48:10,371 - INFO - Fetching Nifty option chain data using Fyers API
+2025-06-16 13:48:11,293 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 13:48:12,480 - INFO - Current Nifty spot price: 0
+2025-06-16 13:48:12,480 - INFO - Sample option data structure: ['ask', 'bid', 'description', 'ex_symbol', 'exchange', 'fp', 'fpch', 'fpchp', 'fyToken', 'ltp', 'ltpch', 'ltpchp', 'option_type', 'strike_price', 'symbol']
+2025-06-16 13:48:12,482 - INFO - Top 5 CE OI: [{'strikePrice': 25500, 'openInterest': 8216700}, {'strikePrice': 25300, 'openInterest': 7775700}, {'strikePrice': 25000, 'openInterest': 6999600}, {'strikePrice': 25200, 'openInterest': 6201975}, {'strikePrice': 24900, 'openInterest': 5374950}]
+2025-06-16 13:48:12,483 - INFO - Top 5 PE OI: [{'strikePrice': 24800, 'openInterest': 9974550}, {'strikePrice': 24700, 'openInterest': 9287625}, {'strikePrice': 24000, 'openInterest': 8955600}, {'strikePrice': 24500, 'openInterest': 8407200}, {'strikePrice': 24900, 'openInterest': 7926300}]
+2025-06-16 13:48:12,483 - INFO - Successfully fetched option chain with 82 options
+2025-06-16 13:48:12,484 - INFO - Current PUT premium: 84.8, Breakout level: 94.3
+2025-06-16 13:48:12,484 - INFO - Current CALL premium: 9.65, Breakout level: 10.5
+2025-06-16 13:49:12,507 - INFO - Current IST time: 2025-06-16 13:49:12
+2025-06-16 13:49:12,507 - INFO - Fetching Nifty option chain data using Fyers API
+2025-06-16 13:49:13,373 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 13:49:14,630 - INFO - Current Nifty spot price: 0
+2025-06-16 13:49:14,630 - INFO - Sample option data structure: ['ask', 'bid', 'description', 'ex_symbol', 'exchange', 'fp', 'fpch', 'fpchp', 'fyToken', 'ltp', 'ltpch', 'ltpchp', 'option_type', 'strike_price', 'symbol']
+2025-06-16 13:49:14,633 - INFO - Top 5 CE OI: [{'strikePrice': 25500, 'openInterest': 8216700}, {'strikePrice': 25300, 'openInterest': 7775700}, {'strikePrice': 25000, 'openInterest': 6999600}, {'strikePrice': 25200, 'openInterest': 6201975}, {'strikePrice': 24900, 'openInterest': 5374950}]
+2025-06-16 13:49:14,633 - INFO - Top 5 PE OI: [{'strikePrice': 24800, 'openInterest': 9974550}, {'strikePrice': 24700, 'openInterest': 9287625}, {'strikePrice': 24000, 'openInterest': 8955600}, {'strikePrice': 24500, 'openInterest': 8407200}, {'strikePrice': 24900, 'openInterest': 7926300}]
+2025-06-16 13:49:14,633 - INFO - Successfully fetched option chain with 82 options
+2025-06-16 13:49:14,634 - INFO - Current PUT premium: 86.3, Breakout level: 94.3
+2025-06-16 13:49:14,634 - INFO - Current CALL premium: 9.3, Breakout level: 10.5
+2025-06-16 13:50:14,661 - INFO - Current IST time: 2025-06-16 13:50:14
+2025-06-16 13:50:14,661 - INFO - Fetching Nifty option chain data using Fyers API
+2025-06-16 13:50:15,460 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 13:50:17,004 - INFO - Current Nifty spot price: 0
+2025-06-16 13:50:17,004 - INFO - Sample option data structure: ['ask', 'bid', 'description', 'ex_symbol', 'exchange', 'fp', 'fpch', 'fpchp', 'fyToken', 'ltp', 'ltpch', 'ltpchp', 'option_type', 'strike_price', 'symbol']
+2025-06-16 13:50:17,006 - INFO - Top 5 CE OI: [{'strikePrice': 25500, 'openInterest': 8216700}, {'strikePrice': 25300, 'openInterest': 7848525}, {'strikePrice': 25000, 'openInterest': 6990675}, {'strikePrice': 25200, 'openInterest': 6075375}, {'strikePrice': 25100, 'openInterest': 4840125}]
+2025-06-16 13:50:17,007 - INFO - Top 5 PE OI: [{'strikePrice': 24800, 'openInterest': 9974550}, {'strikePrice': 24700, 'openInterest': 9325950}, {'strikePrice': 24000, 'openInterest': 8838525}, {'strikePrice': 24500, 'openInterest': 8446275}, {'strikePrice': 24900, 'openInterest': 7994625}]
+2025-06-16 13:50:17,007 - INFO - Successfully fetched option chain with 82 options
+2025-06-16 13:50:17,008 - INFO - Current PUT premium: 87.4, Breakout level: 94.3
+2025-06-16 13:50:17,008 - INFO - Current CALL premium: 9.2, Breakout level: 10.5
+2025-06-16 13:50:41,327 - INFO - Starting Open Interest Option Buying Strategy...
+2025-06-16 13:50:41,327 - INFO - Checking authentication status...
+2025-06-16 13:50:41,330 - INFO - Authentication successful. Creating strategy instance...
+2025-06-16 13:50:42,147 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 13:50:43,083 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 13:50:43,083 - INFO - Authentication verified for today's trading session
+2025-06-16 13:50:43,083 - INFO - Strategy initialized for a new trading day
+2025-06-16 13:50:43,083 - INFO - Strategy initialized successfully.
+2025-06-16 13:50:43,084 - INFO - Strategy scheduled. Running main loop...
+2025-06-16 13:51:43,170 - INFO - Current IST time: 2025-06-16 13:51:43
+2025-06-16 13:52:43,196 - INFO - Current IST time: 2025-06-16 13:52:43
+2025-06-16 13:53:43,216 - INFO - Current IST time: 2025-06-16 13:53:43
