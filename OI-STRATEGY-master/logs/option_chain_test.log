@@ -1,0 +1,118 @@
+2025-06-16 09:45:04,644 - INFO - Starting option chain test...
+2025-06-16 09:45:04,644 - INFO - Testing direct Fyers option chain API call
+2025-06-16 09:45:05,345 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 09:45:05,346 - INFO - Fetching expiry dates for NSE:NIFTY50-INDEX
+2025-06-16 09:45:05,915 - ERROR - Failed to fetch expiry dates: {'message': 'Please provide valid inputs', 'code': -50, 's': 'error'}
+2025-06-16 09:45:05,915 - ERROR - Direct Fyers API test failed
+2025-06-16 09:45:05,915 - INFO - Testing get_nifty_option_chain interface
+2025-06-16 09:45:05,915 - INFO - Fetching Nifty option chain data using Fyers API
+2025-06-16 09:45:06,548 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 09:45:06,557 - INFO - Fetching expiry dates for NSE:NIFTY50-INDEX
+2025-06-16 09:45:07,164 - ERROR - Failed to fetch expiry dates: {'message': 'Please provide valid inputs', 'code': -50, 's': 'error'}
+2025-06-16 09:45:07,165 - INFO - Using fallback method to fetch option chain from NSE
+2025-06-16 09:45:07,165 - INFO - Fetching NSE main page to set cookies
+2025-06-16 09:45:10,526 - INFO - Fetching option chain with established session
+2025-06-16 09:45:10,733 - ERROR - Error processing NSE response: Expecting value: line 1 column 1 (char 0)
+2025-06-16 09:45:10,737 - ERROR - Option chain is empty
+2025-06-16 09:45:10,737 - ERROR - Interface test failed
+2025-06-16 09:45:10,738 - INFO - Test complete
+2025-06-16 09:49:31,791 - INFO - Starting option chain test...
+2025-06-16 09:49:31,791 - INFO - Testing direct Fyers option chain API call
+2025-06-16 09:49:32,524 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 09:49:32,524 - INFO - Fetching expiry dates for NSE:NIFTY50-INDEX
+2025-06-16 09:49:32,524 - INFO - Request data: {'symbol': 'NSE:NIFTY50-INDEX', 'strikeCount': 20}
+2025-06-16 09:49:33,129 - INFO - Response structure: dict_keys(['message', 'code', 's'])
+2025-06-16 09:49:33,129 - ERROR - Failed to fetch expiry dates: {'message': 'Please provide valid inputs', 'code': -50, 's': 'error'}
+2025-06-16 09:49:33,129 - ERROR - Direct Fyers API test failed
+2025-06-16 09:49:33,129 - INFO - Testing get_nifty_option_chain interface
+2025-06-16 09:49:33,129 - INFO - Fetching Nifty option chain data using Fyers API
+2025-06-16 09:49:33,780 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 09:49:33,780 - INFO - Fetching expiry dates for NSE:NIFTY50-INDEX
+2025-06-16 09:49:33,780 - INFO - Request data: {'symbol': 'NSE:NIFTY50-INDEX', 'strikeCount': 20}
+2025-06-16 09:49:34,378 - INFO - Response structure: dict_keys(['message', 'code', 's'])
+2025-06-16 09:49:34,378 - ERROR - Failed to fetch expiry dates: {'message': 'Please provide valid inputs', 'code': -50, 's': 'error'}
+2025-06-16 09:49:34,379 - INFO - Using fallback method to fetch option chain from NSE
+2025-06-16 09:49:34,379 - INFO - Fetching NSE main page to set cookies
+2025-06-16 09:49:37,749 - INFO - Fetching option chain with established session
+2025-06-16 09:49:37,946 - ERROR - Error processing NSE response: Expecting value: line 1 column 1 (char 0)
+2025-06-16 09:49:37,950 - ERROR - Option chain is empty
+2025-06-16 09:49:37,951 - ERROR - Interface test failed
+2025-06-16 09:49:37,951 - INFO - Test complete
+2025-06-16 09:55:18,745 - INFO - Starting option chain test...
+2025-06-16 09:55:18,745 - INFO - Testing direct Fyers option chain API call
+2025-06-16 09:55:19,514 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 09:55:19,514 - INFO - Fetching expiry dates for NSE:NIFTY50-INDEX
+2025-06-16 09:55:19,514 - INFO - Request data: {'symbol': 'NSE:NIFTY50-INDEX', 'strikecount': 20}
+2025-06-16 09:55:20,251 - INFO - Response structure: dict_keys(['code', 'data', 'message', 's'])
+2025-06-16 09:55:20,251 - INFO - Response structure: ['callOi', 'expiryData', 'indiavixData', 'optionsChain', 'putOi']
+2025-06-16 09:55:20,251 - INFO - Available expiry dates: ['19-06-2025', '26-06-2025', '03-07-2025', '10-07-2025', '17-07-2025', '31-07-2025', '28-08-2025', '25-09-2025', '24-12-2025', '26-03-2026', '25-06-2026', '31-12-2026', '24-06-2027', '30-12-2027', '29-06-2028', '28-12-2028', '28-06-2029', '27-12-2029']
+2025-06-16 09:55:20,252 - INFO - Using expiry: 19-06-2025, timestamp: 1750327200
+2025-06-16 09:55:20,252 - INFO - Fetching option chain with expiry timestamp
+2025-06-16 09:55:20,252 - INFO - Request data: {'symbol': 'NSE:NIFTY50-INDEX', 'strikecount': 20, 'timestamp': '1750327200'}
+2025-06-16 09:55:20,948 - INFO - Option chain structure: ['callOi', 'expiryData', 'indiavixData', 'optionsChain', 'putOi']
+2025-06-16 09:55:20,948 - INFO - Total options in chain: 83
+2025-06-16 09:55:20,948 - INFO - Sample strike data: dict_keys(['ask', 'bid', 'description', 'ex_symbol', 'exchange', 'fp', 'fpch', 'fpchp', 'fyToken', 'ltp', 'ltpch', 'ltpchp', 'option_type', 'strike_price', 'symbol'])
+2025-06-16 09:55:20,949 - INFO - Direct Fyers API test successful
+2025-06-16 09:55:20,949 - INFO - Testing get_nifty_option_chain interface
+2025-06-16 09:55:20,949 - INFO - Fetching Nifty option chain data using Fyers API
+2025-06-16 09:55:21,637 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 09:55:21,639 - INFO - Fetching expiry dates for NSE:NIFTY50-INDEX
+2025-06-16 09:55:21,639 - INFO - Request data: {'symbol': 'NSE:NIFTY50-INDEX', 'strikecount': 20}
+2025-06-16 09:55:22,327 - INFO - Response structure: dict_keys(['code', 'data', 'message', 's'])
+2025-06-16 09:55:22,327 - INFO - Using expiry date: 19-06-2025, timestamp: 1750327200
+2025-06-16 09:55:22,327 - INFO - Fetching option chain for NSE:NIFTY50-INDEX with expiry timestamp 1750327200
+2025-06-16 09:55:22,329 - INFO - Request data: {'symbol': 'NSE:NIFTY50-INDEX', 'strikecount': 20, 'timestamp': '1750327200'}
+2025-06-16 09:55:22,985 - INFO - Current Nifty spot price: 0
+2025-06-16 09:55:22,987 - INFO - Successfully fetched option chain with 0 options
+2025-06-16 09:55:22,987 - ERROR - Option chain is empty
+2025-06-16 09:55:22,987 - ERROR - Interface test failed
+2025-06-16 09:55:22,988 - INFO - Test complete
+2025-06-16 10:00:20,381 - INFO - Starting option chain test...
+2025-06-16 10:00:20,381 - INFO - Testing direct Fyers option chain API call
+2025-06-16 10:00:21,099 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 10:00:21,100 - INFO - Fetching expiry dates for NSE:NIFTY50-INDEX
+2025-06-16 10:00:21,100 - INFO - Request data: {'symbol': 'NSE:NIFTY50-INDEX', 'strikecount': 20}
+2025-06-16 10:00:21,703 - INFO - Response structure: dict_keys(['code', 'data', 'message', 's'])
+2025-06-16 10:00:21,705 - INFO - Response structure: ['callOi', 'expiryData', 'indiavixData', 'optionsChain', 'putOi']
+2025-06-16 10:00:21,705 - INFO - Available expiry dates: ['19-06-2025', '26-06-2025', '03-07-2025', '10-07-2025', '17-07-2025', '31-07-2025', '28-08-2025', '25-09-2025', '24-12-2025', '26-03-2026', '25-06-2026', '31-12-2026', '24-06-2027', '30-12-2027', '29-06-2028', '28-12-2028', '28-06-2029', '27-12-2029']
+2025-06-16 10:00:21,705 - INFO - Using expiry: 19-06-2025, timestamp: 1750327200
+2025-06-16 10:00:21,706 - INFO - Fetching option chain with expiry timestamp
+2025-06-16 10:00:21,706 - INFO - Request data: {'symbol': 'NSE:NIFTY50-INDEX', 'strikecount': 20, 'timestamp': '1750327200'}
+2025-06-16 10:00:22,272 - INFO - Option chain structure: ['callOi', 'expiryData', 'indiavixData', 'optionsChain', 'putOi']
+2025-06-16 10:00:22,272 - INFO - Total options in chain: 83
+2025-06-16 10:00:22,272 - INFO - Sample strike data: dict_keys(['ask', 'bid', 'description', 'ex_symbol', 'exchange', 'fp', 'fpch', 'fpchp', 'fyToken', 'ltp', 'ltpch', 'ltpchp', 'option_type', 'strike_price', 'symbol'])
+2025-06-16 10:00:22,272 - INFO - Direct Fyers API test successful
+2025-06-16 10:00:22,272 - INFO - Testing get_nifty_option_chain interface
+2025-06-16 10:00:22,272 - INFO - Fetching Nifty option chain data using Fyers API
+2025-06-16 10:00:22,833 - INFO - Successfully authenticated with Fyers API for user: MAYANK CHOUDHARI
+2025-06-16 10:00:22,833 - INFO - Fetching expiry dates for NSE:NIFTY50-INDEX
+2025-06-16 10:00:22,833 - INFO - Request data: {'symbol': 'NSE:NIFTY50-INDEX', 'strikecount': 20}
+2025-06-16 10:00:23,363 - INFO - Response structure: dict_keys(['code', 'data', 'message', 's'])
+2025-06-16 10:00:23,364 - INFO - Using expiry date: 19-06-2025, timestamp: 1750327200
+2025-06-16 10:00:23,364 - INFO - Fetching option chain for NSE:NIFTY50-INDEX with expiry timestamp 1750327200
+2025-06-16 10:00:23,364 - INFO - Request data: {'symbol': 'NSE:NIFTY50-INDEX', 'strikecount': 20, 'timestamp': '1750327200'}
+2025-06-16 10:00:23,918 - INFO - Current Nifty spot price: 0
+2025-06-16 10:00:23,918 - INFO - Sample option data structure: ['ask', 'bid', 'description', 'ex_symbol', 'exchange', 'fp', 'fpch', 'fpchp', 'fyToken', 'ltp', 'ltpch', 'ltpchp', 'option_type', 'strike_price', 'symbol']
+2025-06-16 10:00:23,919 - INFO - Processed 82 options
+2025-06-16 10:00:23,921 - INFO - Sample symbols - CE: NSE:NIFTY2561923750CE, PE: NSE:NIFTY2561923750PE
+2025-06-16 10:00:23,922 - INFO - Successfully fetched option chain with 82 options
+2025-06-16 10:00:23,922 - INFO - Option chain shape: (82, 11)
+2025-06-16 10:00:23,922 - INFO - Option chain columns: ['symbol', 'strikePrice', 'option_type', 'lastPrice', 'openInterest', 'change', 'changePercent', 'volume', 'bidPrice', 'askPrice', 'underlyingValue']
+2025-06-16 10:00:23,926 - INFO - Call options sample:
+                  symbol  strikePrice  lastPrice  openInterest
+1  NSE:NIFTY2561923750CE        23750     955.20           525
+3  NSE:NIFTY2561923800CE        23800     941.75         30525
+5  NSE:NIFTY2561923850CE        23850     839.00          1275
+2025-06-16 10:00:23,927 - INFO - Put options sample:
+                  symbol  strikePrice  lastPrice  openInterest
+0  NSE:NIFTY2561923750PE        23750       8.70        555975
+2  NSE:NIFTY2561923800PE        23800       9.50       4575450
+4  NSE:NIFTY2561923850PE        23850      10.55        689250
+2025-06-16 10:00:23,929 - INFO - Underlying spot price: 0
+2025-06-16 10:00:23,929 - INFO - ATM strike: 23750
+2025-06-16 10:00:23,931 - INFO - ATM options:
+                  symbol option_type  strikePrice  lastPrice  openInterest
+0  NSE:NIFTY2561923750PE          PE        23750        8.7        555975
+1  NSE:NIFTY2561923750CE          CE        23750      955.2           525
+2025-06-16 10:00:23,931 - INFO - Interface test successful
+2025-06-16 10:00:23,932 - INFO - Test complete

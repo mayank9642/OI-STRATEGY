@@ -1,0 +1,5 @@
+{
+  "success": false,
+  "error": "'datetime.date' object has no attribute 'date'",
+  "date": "2025-06-09"
+}
