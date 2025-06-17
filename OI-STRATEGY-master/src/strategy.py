@@ -14,6 +14,7 @@ from src.fyers_api_utils import (
 from src.nse_data_new import get_nifty_option_chain
 from src.config import load_config
 from src.token_helper import ensure_valid_token
+import threading
 
 # Setup logging
 logging.basicConfig(
@@ -151,41 +152,39 @@ class OpenInterestStrategy:
             return False
     
     def monitor_for_breakout(self):
-        """Monitor option premiums for breakout (10% increase)"""
+        """Continuously monitor option premiums for breakout (every second) until trade is exited"""
         try:
-            # Only monitor if we don't have an active trade
-            if self.active_trade:
-                return
-            
-            # Get current option chain data
-            option_chain = get_nifty_option_chain()
-            
-            # Check for PUT breakout
-            current_put_premium = option_chain[(option_chain['strikePrice'] == self.highest_put_oi_strike) & 
-                                             (option_chain['option_type'] == 'PE')]['lastPrice'].values[0]
-            
-            # Check for CALL breakout
-            current_call_premium = option_chain[(option_chain['strikePrice'] == self.highest_call_oi_strike) & 
-                                              (option_chain['option_type'] == 'CE')]['lastPrice'].values[0]
-            
-            logging.info(f"Current PUT premium: {current_put_premium}, Breakout level: {self.put_breakout_level}")
-            logging.info(f"Current CALL premium: {current_call_premium}, Breakout level: {self.call_breakout_level}")
-            
-            # Check for PUT breakout
-            if current_put_premium >= self.put_breakout_level:
-                self.entry_time = self.get_ist_datetime()
-                symbol = self.highest_put_oi_symbol
-                logging.info(f"PUT BREAKOUT DETECTED: {symbol} at premium {current_put_premium}")
-                return self.execute_trade(symbol, "BUY", current_put_premium)
-                
-            # Check for CALL breakout
-            if current_call_premium >= self.call_breakout_level:
-                self.entry_time = self.get_ist_datetime()
-                symbol = self.highest_call_oi_symbol
-                logging.info(f"CALL BREAKOUT DETECTED: {symbol} at premium {current_call_premium}")
-                return self.execute_trade(symbol, "BUY", current_call_premium)
-                
-            return None
+            def monitor_loop():
+                while not self.active_trade:
+                    try:
+                        option_chain = get_nifty_option_chain()
+                        # Check for PUT breakout
+                        current_put_premium = option_chain[(option_chain['strikePrice'] == self.highest_put_oi_strike) & 
+                                                         (option_chain['option_type'] == 'PE')]['lastPrice'].values[0]
+                        # Check for CALL breakout
+                        current_call_premium = option_chain[(option_chain['strikePrice'] == self.highest_call_oi_strike) & 
+                                                          (option_chain['option_type'] == 'CE')]['lastPrice'].values[0]
+                        logging.info(f"Current PUT premium: {current_put_premium}, Breakout level: {self.put_breakout_level}")
+                        logging.info(f"Current CALL premium: {current_call_premium}, Breakout level: {self.call_breakout_level}")
+                        # Check for PUT breakout
+                        if current_put_premium >= self.put_breakout_level:
+                            self.entry_time = self.get_ist_datetime()
+                            symbol = self.highest_put_oi_symbol
+                            logging.info(f"PUT BREAKOUT DETECTED: {symbol} at premium {current_put_premium}")
+                            self.execute_trade(symbol, "BUY", current_put_premium)
+                            break
+                        # Check for CALL breakout
+                        if current_call_premium >= self.call_breakout_level:
+                            self.entry_time = self.get_ist_datetime()
+                            symbol = self.highest_call_oi_symbol
+                            logging.info(f"CALL BREAKOUT DETECTED: {symbol} at premium {current_call_premium}")
+                            self.execute_trade(symbol, "BUY", current_call_premium)
+                            break
+                    except Exception as e:
+                        logging.error(f"Error in continuous breakout monitoring: {str(e)}")
+                    time.sleep(1)  # Check every second
+            # Start the monitoring loop in the main thread (blocking until trade is entered)
+            monitor_loop()
         except Exception as e:
             logging.error(f"Error monitoring for breakout: {str(e)}")
             return None
@@ -483,7 +482,7 @@ class OpenInterestStrategy:
         
         return ist_now
         
-    def run_strategy(self):
+    def run_strategy(self, force_analysis=False):
         """Main function to run the strategy"""
         try:
             # Get current time in IST
@@ -522,11 +521,12 @@ class OpenInterestStrategy:
             # Step 1: Around 9:20, identify high OI strikes
             analysis_time = datetime.time(9, 20)
             # Give it a 1-minute window to ensure the job runs (9:20 to 9:21)
-            if (current_time.hour == analysis_time.hour and 
+            if force_analysis or (
+                current_time.hour == analysis_time.hour and 
                 current_time.minute >= analysis_time.minute and 
                 current_time.minute < analysis_time.minute + 1):
                 
-                logging.info("Performing 9:20 AM IST analysis...")
+                logging.info("Performing OI analysis (manual trigger or scheduled)...")
                 self.identify_high_oi_strikes()
                 
             # Step 2: After 9:20, monitor for breakouts

@@ -52,12 +52,10 @@ if __name__ == "__main__":
         
         # Create strategy instance
         strategy_instance = OpenInterestStrategy()
-        
         # Initialize strategy for the day
         if not strategy_instance.initialize_day():
             logging.error("Failed to initialize strategy. Exiting.")
             raise Exception("Strategy initialization failed")
-            
         logging.info("Strategy initialized successfully.")
 
         # Schedule jobs

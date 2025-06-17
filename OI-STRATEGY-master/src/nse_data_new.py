@@ -4,7 +4,7 @@ import logging
 import datetime
 import time
 from io import StringIO
-from src.fyers_api_utils import get_fyers_client
+from src.fyers_api_utils import get_fyers_client, get_nifty_spot_price
 
 
 def get_nifty_option_chain():
@@ -42,6 +42,8 @@ def get_nifty_option_chain():
 
         # Get the first expiry date (nearest expiry)
         expiry_timestamp = expiry_data[0]['expiry']
+        expiry_str = expiry_data[0].get('date', str(expiry_timestamp))
+        logging.info(f"Using option chain expiry: {expiry_str}")
 
         # Step 2: Now fetch the full option chain with the expiry timestamp
         data = {"symbol": symbol, "strikecount": strike_count, "timestamp": expiry_timestamp}
@@ -58,8 +60,8 @@ def get_nifty_option_chain():
             logging.error("Empty options chain returned")
             return _get_nifty_option_chain_fallback()
 
-        # Get the underlying spot price (LTP from NSE:NIFTY50-INDEX)
-        spot_price = response['data'].get('ltp', 0)
+        # Get the underlying spot price using the quotes API (fixes spot price = 0)
+        spot_price = get_nifty_spot_price()
         logging.info(f"Current Nifty spot price: {spot_price}")
 
         # Process option chain data into a consistent format
@@ -74,6 +76,7 @@ def get_nifty_option_chain():
             strike_price = option_data.get('strike_price', 0)
             option_type = option_data.get('option_type', '')
             symbol = option_data.get('symbol', '')
+            expiry = option_data.get('expiry', expiry_str)
 
             # Extract data for CE or PE options
             if option_type in ['CE', 'PE']:
@@ -88,7 +91,8 @@ def get_nifty_option_chain():
                     'volume': option_data.get('volume', 0),  # Volume
                     'bidPrice': option_data.get('bid', 0),  # Bid price
                     'askPrice': option_data.get('ask', 0),  # Ask price
-                    'underlyingValue': spot_price
+                    'underlyingValue': spot_price,
+                    'expiry': expiry
                 })
 
         options_df = pd.DataFrame(processed_options)
@@ -99,6 +103,15 @@ def get_nifty_option_chain():
             pe_oi = options_df[options_df['option_type'] == 'PE'].sort_values('openInterest', ascending=False).head(5)
             logging.info(f"Top 5 CE OI: {ce_oi[['strikePrice', 'openInterest']].to_dict('records')}")
             logging.info(f"Top 5 PE OI: {pe_oi[['strikePrice', 'openInterest']].to_dict('records')}")
+            # Debug: Print full details of top 5 CE OI options
+            logging.info(f"Top 5 CE OI full details: {ce_oi[['strikePrice','symbol','expiry','lastPrice','openInterest','bidPrice','askPrice']].to_dict('records')}")
+            # Log only the highest OI CE and PE with all details
+            highest_ce = ce_oi.iloc[0] if not ce_oi.empty else None
+            highest_pe = pe_oi.iloc[0] if not pe_oi.empty else None
+            if highest_ce is not None:
+                logging.info(f"Highest CE OI details: {{'strikePrice': {highest_ce['strikePrice']}, 'symbol': '{highest_ce['symbol']}', 'expiry': '{highest_ce['expiry']}', 'lastPrice': {highest_ce['lastPrice']}, 'openInterest': {highest_ce['openInterest']}, 'bidPrice': {highest_ce['bidPrice']}, 'askPrice': {highest_ce['askPrice']}}}")
+            if highest_pe is not None:
+                logging.info(f"Highest PE OI details: {{'strikePrice': {highest_pe['strikePrice']}, 'symbol': '{highest_pe['symbol']}', 'expiry': '{highest_pe['expiry']}', 'lastPrice': {highest_pe['lastPrice']}, 'openInterest': {highest_pe['openInterest']}, 'bidPrice': {highest_pe['bidPrice']}, 'askPrice': {highest_pe['askPrice']}}}")
             logging.info(f"Successfully fetched option chain with {len(options_df)} options")
         else:
             logging.warning("Option chain DataFrame is empty after processing.")

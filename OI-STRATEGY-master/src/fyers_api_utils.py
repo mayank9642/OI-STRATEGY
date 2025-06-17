@@ -337,3 +337,28 @@ def start_market_data_websocket(symbols, data_type="symbolData"):
     except Exception as e:
         logging.error(f"Error starting market data WebSocket: {str(e)}")
         return None
+
+def get_nifty_spot_price():
+    """
+    Fetch the current Nifty spot price using the Fyers quotes API.
+    
+    Returns:
+        float: The current Nifty spot price, or 0 if unavailable.
+    """
+    try:
+        fyers = get_fyers_client()
+        if not fyers:
+            logging.error("Fyers client not available for spot price fetch.")
+            return 0
+        data = {"symbols": "NSE:NIFTY50-INDEX"}
+        response = fyers.quotes(data=data)
+        if response.get('s') == 'ok' and 'd' in response and len(response['d']) > 0:
+            spot = response['d'][0].get('v', {}).get('lp', 0)
+            logging.info(f"Fetched Nifty spot price from quotes API: {spot}")
+            return spot
+        else:
+            logging.error(f"Failed to fetch Nifty spot price from quotes API: {response}")
+            return 0
+    except Exception as e:
+        logging.error(f"Error fetching Nifty spot price: {str(e)}")
+        return 0
