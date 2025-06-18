@@ -190,10 +190,10 @@ class OpenInterestStrategy:
             return None
     
     def execute_trade(self, symbol, side, entry_price):
-        """Execute the option trade with fixed position size (paper trading)"""
+        """Execute the option trade with correct lot size for Nifty options"""
         try:
-            # Use fixed position size for paper trading
-            qty = 1  # Fixed lot size for all trades
+            # Use correct lot size for Nifty options
+            qty = 75  # Nifty lot size (update if changed by exchange)
             
             # Calculate notional value and fixed risk metrics
             notional_value = entry_price * qty
