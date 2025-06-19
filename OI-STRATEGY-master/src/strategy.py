@@ -6,6 +6,7 @@ import schedule
 import json
 import os
 import pytz
+import threading
 from src.fyers_api_utils import (
     get_fyers_client, place_market_order, modify_order, exit_position,
     place_limit_order, place_sl_order, place_sl_limit_order, 
@@ -14,7 +15,9 @@ from src.fyers_api_utils import (
 from src.nse_data_new import get_nifty_option_chain
 from src.config import load_config
 from src.token_helper import ensure_valid_token
-import threading
+
+# Ensure logs directory exists
+os.makedirs('logs', exist_ok=True)
 
 # Setup logging
 logging.basicConfig(
