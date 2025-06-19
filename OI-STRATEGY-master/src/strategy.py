@@ -42,6 +42,11 @@ class OpenInterestStrategy:
         self.data_socket = None
         self.trade_history = []
         
+        # Paper trading mode (simulate trades without placing actual orders)
+        self.paper_trading = self.config.get('strategy', {}).get('paper_trading', True)
+        # Minimum premium threshold to avoid triggering trades on tiny values
+        self.min_premium_threshold = self.config.get('strategy', {}).get('min_premium_threshold', 3.0)
+        
         # Load existing trade history if available
         try:
             if os.path.exists('logs/trade_history.csv'):
@@ -169,15 +174,15 @@ class OpenInterestStrategy:
                                                           (option_chain['option_type'] == 'CE')]['lastPrice'].values[0]
                         logging.info(f"Current PUT premium: {current_put_premium}, Breakout level: {self.put_breakout_level}")
                         logging.info(f"Current CALL premium: {current_call_premium}, Breakout level: {self.call_breakout_level}")
-                        # Check for PUT breakout
-                        if current_put_premium >= self.put_breakout_level:
+                        # Check for PUT breakout with minimum premium threshold
+                        if current_put_premium >= self.put_breakout_level and current_put_premium >= self.min_premium_threshold:
                             self.entry_time = self.get_ist_datetime()
                             symbol = self.highest_put_oi_symbol
                             logging.info(f"PUT BREAKOUT DETECTED: {symbol} at premium {current_put_premium}")
                             self.execute_trade(symbol, "BUY", current_put_premium)
                             break
-                        # Check for CALL breakout
-                        if current_call_premium >= self.call_breakout_level:
+                        # Check for CALL breakout with minimum premium threshold
+                        if current_call_premium >= self.call_breakout_level and current_call_premium >= self.min_premium_threshold:
                             self.entry_time = self.get_ist_datetime()
                             symbol = self.highest_call_oi_symbol
                             logging.info(f"CALL BREAKOUT DETECTED: {symbol} at premium {current_call_premium}")
@@ -201,12 +206,28 @@ class OpenInterestStrategy:
             # Calculate notional value and fixed risk metrics
             notional_value = entry_price * qty
             
+            # Check if premium value is too low
+            if entry_price < self.min_premium_threshold:
+                logging.warning(f"Trade rejected: Premium value ({entry_price}) is below threshold ({self.min_premium_threshold})")
+                return None
+            
             # Log trade setup info
-            logging.info(f"Paper Trading Setup - Symbol: {symbol}, Price: {entry_price}")
+            if self.paper_trading:
+                logging.info(f"PAPER TRADING MODE - Symbol: {symbol}, Price: {entry_price}")
+            else:
+                logging.info(f"LIVE TRADING - Symbol: {symbol}, Price: {entry_price}")
+                
             logging.info(f"Trade Size: {qty} lots, Notional Value: {notional_value}")
             
             # Place order using Fyers API (or simulate for paper trading)
-            order_response = place_market_order(self.fyers, symbol, qty, side)
+            order_response = None
+            if self.paper_trading:
+                # Simulate a successful order with a dummy ID in paper trading mode
+                order_response = {'s': 'ok', 'id': f'PAPER-{int(time.time())}'}
+                logging.info(f"Paper trade simulated: {symbol} {side} {qty}")
+            else:
+                # Place a real order via Fyers API
+                order_response = place_market_order(self.fyers, symbol, qty, side)
             
             if order_response and order_response.get('s') == 'ok':
                 self.order_id = order_response.get('id')
@@ -220,11 +241,12 @@ class OpenInterestStrategy:
                     'entry_time': self.entry_time,
                     'stoploss': round(entry_price * 0.8, 1),  # 20% stoploss
                     'target': round(entry_price * 1.2, 1),    # 20% profit (1:2 risk-reward)
-                    'exit_time': exit_time  # 30-min time limit
+                    'exit_time': exit_time,  # 30-min time limit
+                    'paper_trade': self.paper_trading  # Track if this is a paper trade
                 }
                 
                 # Log trade details with better formatting
-                logging.info(f"=== NEW PAPER TRADE EXECUTED ===")
+                logging.info(f"=== {'PAPER' if self.paper_trading else 'LIVE'} TRADE EXECUTED ===")
                 logging.info(f"Symbol: {symbol}")
                 logging.info(f"Entry Price: {entry_price}")
                 logging.info(f"Quantity: {qty} lots")
@@ -241,23 +263,26 @@ class OpenInterestStrategy:
                     'entry_time': self.entry_time.strftime('%H:%M:%S'),
                     'entry_price': entry_price,
                     'quantity': qty,
-                    'status': 'OPEN',
-                    'exit_price': None,
-                    'pnl': None,
-                    'exit_reason': None,
-                    'paper_trade': True  # Mark as paper trade
+                    'stoploss': self.active_trade['stoploss'],
+                    'target': self.active_trade['target'],
+                    'paper_trade': self.paper_trading
                 })
                 
-                return self.active_trade
+                # Save updated trade history to CSV
+                pd.DataFrame(self.trade_history).to_csv('logs/trade_history.csv', index=False)
+                
+                return True
             else:
-                logging.error(f"Order placement failed: {order_response}")
-                return None
+                if not self.paper_trading:  # Only log errors for real trading
+                    logging.error(f"Order placement failed: {order_response}")
+                return False
+                
         except Exception as e:
             logging.error(f"Error executing trade: {str(e)}")
-            return None
+            return False
     
     def manage_position(self):
-        """Manage active position and check for exit conditions with enhanced reporting"""
+        """Monitor and manage existing positions"""
         if not self.active_trade:
             return
             
@@ -268,7 +293,6 @@ class OpenInterestStrategy:
             quantity = self.active_trade['quantity']
             current_time = self.get_ist_datetime()
             option_chain = get_nifty_option_chain()
-            
             # Parse strike and option type from symbol
             # Extract strike price from symbol (format: NSE:NIFTY25JUN19500CE)
             # The symbol format should be standardized in our get_nifty_option_chain function
@@ -307,13 +331,16 @@ class OpenInterestStrategy:
                     logging.error("Could not find the current option price")
                     return None
             
+            # Check if this is a paper trade
+            is_paper_trade = self.active_trade.get('paper_trade', self.paper_trading)
+            
             # Calculate current P&L
             entry_value = entry_price * quantity
             current_value = current_price * quantity
             unrealized_pnl = current_value - entry_value
             unrealized_pnl_pct = (unrealized_pnl / entry_value) * 100 if entry_value > 0 else 0
             
-            logging.info(f"Managing position: {symbol}, Current price: {current_price}, " +
+            logging.info(f"Managing {'PAPER' if is_paper_trade else 'LIVE'} position: {symbol}, Current price: {current_price}, " +
                         f"P&L: {unrealized_pnl:.2f} ({unrealized_pnl_pct:.2f}%)")
             
             # Check exit conditions:
@@ -340,56 +367,54 @@ class OpenInterestStrategy:
             
             # Process exit if conditions are met
             if exit_type:
-                # Execute the exit trade
-                exit_response = exit_position(self.fyers, self.active_trade['symbol'], quantity, "SELL")
+                # Execute exit order
+                if is_paper_trade:
+                    # Simulate exit for paper trade
+                    exit_response = {'s': 'ok', 'id': f'PAPER-EXIT-{int(time.time())}'}
+                    logging.info(f"Paper trade exit simulated: {symbol} SELL {quantity}")
+                else:
+                    # Place real exit order
+                    exit_response = exit_position(self.fyers, self.active_trade['symbol'], quantity, "SELL")
                 
                 if exit_response and exit_response.get('s') == 'ok':
-                    # Calculate P&L
+                    # Calculate final P&L
                     entry_value = entry_price * quantity
                     exit_value = exit_price * quantity
                     realized_pnl = exit_value - entry_value
                     realized_pnl_pct = (realized_pnl / entry_value) * 100 if entry_value > 0 else 0
                     
-                    # Log detailed exit information
-                    logging.info(f"=== PAPER TRADE CLOSED ===")
+                    # Log exit details
+                    duration = current_time - self.active_trade['entry_time']
+                    duration_minutes = duration.total_seconds() / 60
+                    
+                    logging.info(f"=== {'PAPER' if is_paper_trade else 'LIVE'} TRADE EXITED: {exit_type} ===")
                     logging.info(f"Symbol: {symbol}")
-                    logging.info(f"Exit Type: {exit_type}")
                     logging.info(f"Entry Price: {entry_price}")
                     logging.info(f"Exit Price: {exit_price}")
                     logging.info(f"Quantity: {quantity}")
                     logging.info(f"P&L: {realized_pnl:.2f} ({realized_pnl_pct:.2f}%)")
-                    logging.info(f"Trade Duration: {(current_time - self.active_trade['entry_time']).total_seconds() / 60:.1f} minutes")
-                    logging.info(f"===================")
+                    logging.info(f"Duration: {duration_minutes:.1f} minutes")
+                    logging.info(f"========================")
                     
                     # Update trade history
                     for trade in self.trade_history:
                         if (trade['symbol'] == symbol and 
-                            trade['entry_time'] == self.active_trade['entry_time'].strftime('%H:%M:%S') and 
-                            trade['status'] == 'OPEN'):
-                            
-                            trade['status'] = 'CLOSED'
-                            trade['exit_price'] = exit_price
+                            trade['entry_time'] == self.active_trade['entry_time'].strftime('%H:%M:%S')):
                             trade['exit_time'] = current_time.strftime('%H:%M:%S')
+                            trade['exit_price'] = exit_price
+                            trade['exit_type'] = exit_type
                             trade['pnl'] = realized_pnl
-                            trade['pnl_pct'] = realized_pnl_pct
-                            trade['exit_reason'] = exit_type
-                            break
+                            trade['pnl_percent'] = realized_pnl_pct
+                            trade['duration_minutes'] = duration_minutes
                     
-                    # Save trade history to CSV for reporting
-                    try:
-                        trade_df = pd.DataFrame(self.trade_history)
-                        trade_df.to_csv('logs/trade_history.csv', index=False)
-                        logging.info("Trade history saved to logs/trade_history.csv")
-                    except Exception as csv_err:
-                        logging.error(f"Error saving trade history: {str(csv_err)}")
+                    # Save updated trade history
+                    pd.DataFrame(self.trade_history).to_csv('logs/trade_history.csv', index=False)
                     
-                    # Reset active trade
+                    # Clear active trade
                     self.active_trade = None
-                    return exit_type
                 else:
-                    logging.error(f"Exit order failed: {exit_response}")
-            
-            return None
+                    if not is_paper_trade:  # Only log errors for real trading
+                        logging.error(f"Failed to exit position: {exit_response}")
         except Exception as e:
             logging.error(f"Error managing position: {str(e)}")
             return None
