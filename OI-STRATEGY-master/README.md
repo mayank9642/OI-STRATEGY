@@ -143,3 +143,21 @@ For more detailed information, see:
 - [QUICK_START.md](QUICK_START.md) - Quick start guide
 - [ENHANCEMENTS.md](ENHANCEMENTS.md) - List of enhancements
 - [TIMEZONE_GUIDE.md](TIMEZONE_GUIDE.md) - Guide for timezone handling
+
+# OI-STRATEGY
+
+This project uses API polling only for option data. WebSocket code and hybrid logic have been removed for simplicity and reliability.
+
+## How it works
+- Option data is polled at a fast interval (0.5s) using the Fyers API.
+- No WebSocket is used for index or option data.
+
+## Legacy files removed
+- hybrid_market_data.py
+- test_option_symbol_formats.py
+- fyers_support_report.py
+- run_option_symbol_test.bat/.ps1
+- run_fyers_support_report.bat
+
+## Main script
+- test_websocket_fixed.py (now only polls option data)

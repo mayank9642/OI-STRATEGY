@@ -19,22 +19,89 @@ os.makedirs('logs', exist_ok=True)
 
 # Setup logging
 logging.basicConfig(
-    filename='logs/main.log',
+    filename='logs/strategy.log',
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
-def job():
+def job(strategy):
     """Run the strategy job at specified intervals"""
     try:
-        strategy = strategy_instance
         strategy.run_strategy()
     except Exception as e:
         logging.error(f"Error in scheduled job: {str(e)}")
 
-if __name__ == "__main__":
+def main():
+    """Main function to start the strategy"""
     try:
         logging.info("Starting Open Interest Option Buying Strategy...")
+        
+        # Ensure we have a valid access token before starting
+        logging.info("Checking authentication status...")
+        access_token = ensure_valid_token()
+        
+        if not access_token:
+            logging.warning("No valid access token found. Attempting to generate one...")
+            access_token = generate_access_token()
+            
+            if not access_token:
+                logging.error("Failed to generate access token. Please run auth.py separately.")
+                raise Exception("Authentication failed")
+                
+        # Create strategy instance
+        strategy_instance = OpenInterestStrategy()
+        # Initialize strategy for the day
+        if not strategy_instance.initialize_day():
+            logging.error("Failed to initialize strategy. Exiting.")
+            raise Exception("Strategy initialization failed")
+        logging.info("Strategy initialized successfully.")
+
+        # Run the strategy once immediately
+        strategy_instance.run_strategy()
+        
+        return {"success": True, "message": "Strategy executed successfully"}
+        
+    except Exception as e:
+        logging.error(f"Error in main: {str(e)}")
+        return {"success": False, "error": str(e)}
+
+def run_immediate():
+    """Run the strategy immediately once, without scheduling"""
+    try:
+        logging.info("Starting Open Interest Option Buying Strategy (immediate mode)...")
+        
+        # Ensure we have a valid access token before starting
+        logging.info("Checking authentication status...")
+        access_token = ensure_valid_token()
+        
+        if not access_token:
+            logging.warning("No valid access token found. Attempting to generate one...")
+            access_token = generate_access_token()
+            
+            if not access_token:
+                logging.error("Failed to generate access token. Please run auth.py separately.")
+                raise Exception("Authentication failed")
+        
+        # Create strategy instance
+        strategy_instance = OpenInterestStrategy()
+        # Initialize strategy for the day
+        if not strategy_instance.initialize_day():
+            logging.error("Failed to initialize strategy. Exiting.")
+            raise Exception("Strategy initialization failed")
+        logging.info("Strategy initialized successfully.")
+
+        # Run the strategy once immediately
+        result = strategy_instance.run_strategy()
+        logging.info("Strategy execution completed.")
+        return result
+    except Exception as e:
+        logging.error(f"Error running immediate strategy: {str(e)}")
+        return {"success": False, "error": str(e)}
+
+def run_scheduled():
+    """Run the strategy with normal scheduling"""
+    try:
+        logging.info("Starting Open Interest Option Buying Strategy (scheduled mode)...")
         
         # Ensure we have a valid access token before starting
         logging.info("Checking authentication status...")
@@ -59,16 +126,12 @@ if __name__ == "__main__":
         logging.info("Strategy initialized successfully.")
 
         # Schedule jobs
-        # Run every minute during market hours
-        # schedule.every().monday.to.friday.at("09:15").do(strategy_instance.initialize_day)  # This syntax is incorrect
-        
         # Correct way to schedule for weekdays at 9:15 AM
         for day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']:
             schedule.every().__getattribute__(day).at("09:15").do(strategy_instance.initialize_day)
         
         # Run the job every minute during market hours
-        # Note: The between method may not be available in this version of the schedule module
-        schedule.every(1).minutes.do(job)
+        schedule.every(1).minutes.do(lambda: job(strategy_instance))
         
         logging.info("Strategy scheduled. Running main loop...")
         
@@ -79,5 +142,22 @@ if __name__ == "__main__":
             
     except KeyboardInterrupt:
         logging.info("Strategy execution stopped by user.")
+        if 'strategy_instance' in locals():
+            strategy_instance.cleanup()
+        return {"success": False, "error": "User interrupted"}
     except Exception as e:
         logging.critical(f"Unhandled exception: {str(e)}")
+        if 'strategy_instance' in locals():
+            strategy_instance.cleanup()
+        return {"success": False, "error": str(e)}
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Open Interest Option Trading Strategy")
+    parser.add_argument('--immediate', '-i', action='store_true', help='Run strategy immediately (skip 9:20 AM check)')
+    args = parser.parse_args()
+    
+    if args.immediate:
+        run_immediate()
+    else:
+        run_scheduled()

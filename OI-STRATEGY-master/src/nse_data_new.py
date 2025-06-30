@@ -7,15 +7,18 @@ from io import StringIO
 from src.fyers_api_utils import get_fyers_client, get_nifty_spot_price
 
 
-def get_nifty_option_chain():
+def get_nifty_option_chain(expiry_index=0):
     """
     Fetch the Nifty 50 option chain using Fyers API with the correct symbol format
-
+    
+    Args:
+        expiry_index (int): Index of expiry to use (0=current, 1=next, etc.)
+        
     Returns:
         DataFrame: Option chain data in pandas DataFrame format with proper symbol names
     """
     try:
-        logging.info("Fetching Nifty option chain data using Fyers API")
+        logging.info(f"Fetching Nifty option chain data using Fyers API for expiry index: {expiry_index}")
         fyers = get_fyers_client()
 
         # If Fyers API client is not available, fall back to alternative method
@@ -40,10 +43,17 @@ def get_nifty_option_chain():
             logging.error("No expiry dates found in response")
             return _get_nifty_option_chain_fallback()
 
-        # Get the first expiry date (nearest expiry)
-        expiry_timestamp = expiry_data[0]['expiry']
-        expiry_str = expiry_data[0].get('date', str(expiry_timestamp))
-        logging.info(f"Using option chain expiry: {expiry_str}")
+        # Check if requested expiry index is valid
+        if expiry_index >= len(expiry_data):
+            logging.error(f"Requested expiry index {expiry_index} exceeds available expiries (total: {len(expiry_data)})")
+            # Fall back to using the last available expiry
+            expiry_index = len(expiry_data) - 1
+            logging.info(f"Using last available expiry at index {expiry_index} instead")
+
+        # Get the specified expiry date
+        expiry_timestamp = expiry_data[expiry_index]['expiry']
+        expiry_str = expiry_data[expiry_index].get('date', str(expiry_timestamp))
+        logging.info(f"Using option chain expiry: {expiry_str} (index {expiry_index})")
 
         # Step 2: Now fetch the full option chain with the expiry timestamp
         data = {"symbol": symbol, "strikecount": strike_count, "timestamp": expiry_timestamp}
