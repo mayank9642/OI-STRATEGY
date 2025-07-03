@@ -917,45 +917,31 @@ class OpenInterestStrategy:
         # Get the trailing stop percentage from config
         config = load_config()
         trailing_stop_pct = config.get('strategy', {}).get('trailing_stop_pct', 10)
-        
-        # Only update if price has moved significantly in our favor
+
         entry_price = self.active_trade['entry_price']
-        
+        symbol = self.active_trade['symbol']
+        current_sl = self.active_trade['stoploss']
+
         # Store the original stoploss if not already stored
         if 'original_stoploss' not in self.active_trade:
             self.active_trade['original_stoploss'] = self.active_trade['stoploss']
-            
+
         original_stoploss = self.active_trade['original_stoploss']
-        
-        # Never move the stoploss below the original stop loss
-        # Calculate potential new stoploss based on current price
-        if self.active_trade['symbol'].endswith('CE'):  # Call option
-            # For call options, price needs to go up for profit
-            # Calculate the trailing stop as a percentage below current price
-            potential_stoploss = current_price * (1 - (trailing_stop_pct / 100))
-            
-            # Only update if the new stop loss would be higher than the current one
-            # and never go below the original stop loss
-            if potential_stoploss > self.active_trade['stoploss'] and potential_stoploss > original_stoploss:
-                old_sl = self.active_trade['stoploss']
-                self.active_trade['stoploss'] = potential_stoploss
-                # Calculate how much profit is now locked in
-                profit_locked_pct = ((potential_stoploss - entry_price) / entry_price) * 100
-                logging.info(f"TRAILING SL | Updated from {old_sl:.2f} to {potential_stoploss:.2f} | " +
-                             f"Current price: {current_price:.2f} | Profit locked: {profit_locked_pct:.2f}%")
-        else:  # Put option
-            # For put options, price needs to go down for profit (opposite logic)
-            # For puts, we'd need to move the stop loss down as price decreases
-            # This is the reverse of call options
-            potential_stoploss = current_price * (1 + (trailing_stop_pct / 100))
-            
-            # For puts, we want to lower the stop loss (not raise it)
-            if potential_stoploss < self.active_trade['stoploss'] and potential_stoploss < original_stoploss:
-                old_sl = self.active_trade['stoploss']
-                self.active_trade['stoploss'] = potential_stoploss
-                profit_locked_pct = ((entry_price - potential_stoploss) / entry_price) * 100
-                logging.info(f"TRAILING SL | Updated from {old_sl:.2f} to {potential_stoploss:.2f} | " +
-                             f"Current price: {current_price:.2f} | Profit locked: {profit_locked_pct:.2f}%")
+
+        # Debug logging for diagnosis
+        logging.info(f"TRAILING SL DEBUG | symbol: {symbol} | entry_price: {entry_price} | current_price: {current_price} | trailing_stop_pct: {trailing_stop_pct} | current_sl: {current_sl} | original_stoploss: {original_stoploss}")
+
+        # For both CE and PE (when long), the stoploss should trail upwards as price increases
+        potential_stoploss = current_price * (1 - (trailing_stop_pct / 100))
+        logging.info(f"TRAILING SL DEBUG | [LONG] potential_stoploss: {potential_stoploss}")
+        if potential_stoploss > current_sl and potential_stoploss > original_stoploss:
+            old_sl = self.active_trade['stoploss']
+            self.active_trade['stoploss'] = potential_stoploss
+            profit_locked_pct = ((potential_stoploss - entry_price) / entry_price) * 100
+            logging.info(f"TRAILING SL | Updated from {old_sl:.2f} to {potential_stoploss:.2f} | " +
+                         f"Current price: {current_price:.2f} | Profit locked: {profit_locked_pct:.2f}%")
+        else:
+            logging.info(f"TRAILING SL DEBUG | [LONG] No update: potential_stoploss ({potential_stoploss}) <= current_sl ({current_sl}) or original_stoploss ({original_stoploss})")
     
     def check_partial_exit(self, current_time, current_price):
         """Check if we should take partial profit based on time elapsed"""
